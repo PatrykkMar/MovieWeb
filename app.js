@@ -3,6 +3,7 @@ const app = express();
 const port = 3000;
 const mongoose = require('mongoose');
 User = require('./api/models/userModel')
+Cast = require('./api/models/castModel')
 const bodyParser = require('body-parser');
 //app.get('/', (req, res) => res.send('Hello World! '));
 //app.listen(port, () => console.log('Example app listening on port '+port));
@@ -29,8 +30,10 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 var routesUsers = require('./api/routes/userRoutes');
+var routesCast = require('./api/routes/castRoutes');
 
 routesUsers(app);
+routesCast(app);
 
 console.log("Connecting DB to: " + mongoDBURI);
 mongoose.connection.on("open", function (err, conn) {
