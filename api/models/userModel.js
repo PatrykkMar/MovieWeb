@@ -75,7 +75,7 @@ UserSchema.pre('save', function(callback) {
     });
   });
   
-  UctorSchema.methods.verifyPassword = function(password, cb) {
+  UserSchema.methods.verifyPassword = function(password, cb) {
       bcrypt.compare(password, this.password, function(err, isMatch) {
       console.log('verifying password in actorModel: ' + password);
       if (err) return cb(err);
@@ -84,4 +84,4 @@ UserSchema.pre('save', function(callback) {
     });
   };
   
-  module.exports = mongoose.model('users', UserSchema);
+  module.exports = mongoose.model('Users', UserSchema);
