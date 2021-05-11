@@ -6,9 +6,11 @@ module.exports = function(app) {
   .get(users.list_all_users)
   .post(users.create_an_user);
 
-  app.route('/v1/users/:userId/add_to_favourites/:movieId')
-    .post(users.add_favourite_movie);
+  app.route('/v1/users/:userId/favourite_movies/:movieId')
+    .post(users.add_favourite_movie)
+    .delete(users.delete_movie_from_favourites);
 
-  app.route('/v1/users/:userId/add_to_must_see/:movieId')
-    .post(users.add_must_see_movie);
+  app.route('/v1/users/:userId/must_see_movies/:movieId')
+    .post(users.add_must_see_movie)
+    .delete(users.delete_movie_from_must_see);
 }
