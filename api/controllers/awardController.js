@@ -1,46 +1,47 @@
 'use strict';
-/*---------------MOVIE----------------------*/
+/*---------------AWARDS----------------------*/
 var mongoose = require('mongoose'),
-    Movie = mongoose.model('Movies');
+    Award = mongoose.model('Awards');
 
-exports.list_movies = function(req, res) {
-    Movie.find({}, function(err, movie) {
+exports.create_new_award = function(req, res) {
+    var new_award = new Award(req.body);
+    
+     new_movie.save(function(err, user) {
         if (err){
             res.status(500).send(err);
         }
         else{
-            res.json(movie);
+            res.json(user);
         }
     });
 };
 
-exports.create_new_movie = function(req, res) {
-    var new_movie = new Movie(req.body);
 
-    new_movie.save(function(err, movie) {
+exports.list_awards = function(req, res) {
+    Movie.find({}, function(err, award) {
         if (err){
             res.status(500).send(err);
         }
         else{
-            res.json(movie);
+            res.json(award);
         }
     });
 };
 
 exports.get_movie = function(req, res) {
-    Movie.findById({_id: mongoose.Types.ObjectId(req.params.movieId)}, function(err, movie) {
+    Movie.findById(function(err, award) {
       if (err){
         res.status(500).send(err);
       }
       else{
-        res.json(movie);
+        res.json(award);
       }
     });
 };
 
-exports.update_movie = function(req, res) {
+exports.update_award = function(req, res) {
     // authorization: check if Critic if not: res.status(403); "an access token is valid, but requires more privileges"
-      Movie.findOneAndUpdate({_id: req.params.movieId}, req.body, {new: true}, function(err, movie) {
+      Movie.findOneAndUpdate({_id: req.params.awardId}, req.body, {new: true}, function(err, award) {
         if (err){
           if(err.name=='ValidationError') {
               res.status(422).send(err);
@@ -50,7 +51,7 @@ exports.update_movie = function(req, res) {
           }
         }
         else{
-          res.json(movie);
+          res.json(award);
         }
       });
   };
@@ -58,16 +59,12 @@ exports.update_movie = function(req, res) {
 
 exports.delete_movie = function(req, res) {
 //Check if the user is an administrator and if not: res.status(403); "an access token is valid, but requires more privileges"
-    Movie.deleteOne({_id: req.params.movieId}, function(err, movie) {
+    Movie.deleteOne({_id: req.params.movieId}, function(err, award) {
         if (err){
             res.status(500).send(err);
         }
         else{
-            res.json({ message: 'Movie successfully deleted' });
+            res.json({ message: 'award successfully deleted' });
         }
     });
 };
-
-exports.search_movies = function(req, res) {
-    var query = {};
-}
