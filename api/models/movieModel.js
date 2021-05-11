@@ -146,7 +146,6 @@ MovieSchema.pre('save', function(callback) {
   });
 
   module.exports = mongoose.model('Movies', MovieSchema);
-  module.exports = mongoose.model('Categories', CategorySchema);
   module.exports = mongoose.model('Comments', CommentSchema);
   module.exports = mongoose.model('Awards', AwardSchema);
   module.exports = mongoose.model('Studios', StudioSchema);

@@ -1,10 +1,10 @@
 'use strict';
 module.exports = function(app) {
-    var cast = require('../controllers/movieController');
+    var movie = require('../controllers/movieController');
 
     app.route('/v1/movies')
-        .get(cast.list_movies)
-        .post(cast.create_new_movie);
+        .get(movie.list_movies)
+        .post(movie.create_new_movie);
 
     /**
      * @section movies
@@ -28,5 +28,5 @@ module.exports = function(app) {
     * @param {string} keyword //in sku, name, or description
     */
     app.route('/v1/movies/search')
-        .get(items.search_movies)
+        .get(movie.search_movies)
 }
