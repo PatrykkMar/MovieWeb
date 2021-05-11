@@ -7,5 +7,8 @@ module.exports = function(app) {
   .post(users.create_an_user);
 
   app.route('/v1/users/:userId/add_to_favourites/:movieId')
-    .post(users.add_favourite_movie)
+    .post(users.add_favourite_movie);
+
+  app.route('/v1/users/:userId/add_to_must_see/:movieId')
+    .post(users.add_must_see_movie);
 }

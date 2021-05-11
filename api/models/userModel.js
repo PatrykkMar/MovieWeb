@@ -61,6 +61,11 @@ var UserSchema = new Schema({
     favourite_movies: {
         type: Array,
         default: []
+    },
+
+    must_see_movies: {
+        type: Array,
+        default: []
     }
 })
 

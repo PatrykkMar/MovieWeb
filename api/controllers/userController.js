@@ -63,3 +63,34 @@ var mongoose = require('mongoose'),
             }
         });
     }
+
+    exports.add_must_see_movie = function(req, res) {
+        
+        var userId = req.params.userId;
+        var movieId = req.params.movieId;
+
+        console.log(userId);
+        console.log(movieId);
+
+        User.findOne({_id: mongoose.Types.ObjectId(userId)}, function(err, user) {
+            if (err){
+                res.status(500).send(err);
+            }
+            else{
+                var must_see = user.must_see_movies;
+                var movie = mongoose.Types.ObjectId(movieId);
+                if(must_see.includes(movie)){
+                    res.status(500).send("Movie already in favourites");
+                } else {
+                    must_see.push(movie);
+                    User.findOneAndUpdate({_id: mongoose.Types.ObjectId(userId)}, {must_see_movies: must_see}, {new: true}, function(err, user){
+                        if (err){
+                            res.status(500).send(err);
+                        } else{
+                            res.json(user);
+                        }
+                    });
+                }
+            }
+        });
+    }
