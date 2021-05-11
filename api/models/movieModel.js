@@ -24,21 +24,21 @@ var CommentSchema = new Schema({
       default: Date.now
     },
 
-    role:{
-        type: String
-    }
+    // role:{
+    //     enum: [...]
+    // }
   }, { strict: false });
 
-  var CategorySchema = new Schema({
-    name: {
-      type: String,
-      required: 'Kindly enter the name of the Category'
-    },
-    description: {
-      type: String,
-      required: 'Kindly enter the description of the Category'
-    },
-  }, { strict: false });
+//   var CategorySchema = new Schema({
+//     name: {
+//       type: String,
+//       required: 'Kindly enter the name of the Category'
+//     },
+//     // description: {
+//     //   type: String,
+//     //   required: 'Kindly enter the description of the Category'
+//     // },
+//   }, { strict: false });
 
 var AwardSchema = new Schema({
     name: {
@@ -49,6 +49,10 @@ var AwardSchema = new Schema({
     countryOfOrigin: {
         type: String,
         required: 'enter where award is given'
+    },
+
+    year: {
+        type: Number
     }
 })
 
@@ -74,7 +78,12 @@ var MovieSchema = new Schema({
         required: 'enter the title of movie'
     },
 
-    description: {
+    originalTitle: {
+        type: String,
+        required: 'enter original title'
+    },
+
+    plot: {
         type: String,
         default: 'this movie has no description yet'
     },
@@ -84,20 +93,23 @@ var MovieSchema = new Schema({
     },
 
     director: [{
-        type: String
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Cast'
     }],
 
     actors: [{
-        type: String
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Cast'
     }],
 
     restOfCast:[{
-        type: String
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Cast'
     }],
 
-    CountryOfOrigin: {
-        type: String
-    },
+    CountryOfOrigin: [{
+        type: String 
+    }],
 
     Boxoffice: {
         type: Number
@@ -119,9 +131,11 @@ var MovieSchema = new Schema({
 
     userComments: [CommentSchema],
 
-    critiscComments: [CommentSchema],
+    criticsComments: [CommentSchema],
 
-    category: [CategorySchema],
+    category: [{
+        type: String
+    }]
 
 }, { strict: false })
 

@@ -6,7 +6,6 @@ var bcrypt = require('bcrypt')
 var UserSchema = new Schema({
     username: {
         type : String,
-        unique: true,
         required: 'username is required'
     },
 
@@ -38,11 +37,11 @@ var UserSchema = new Schema({
         required: 'gender is required'    
     },
 
-    role: {
+    role: [{ 
         type: String,
         enum: ['USER', 'CRITIC', 'ADMINISTRATOR'],
         required: 'role is required'  
-    },
+    }],
 
     profilePicture: {
         data: Buffer, contentType: String
@@ -57,7 +56,7 @@ var UserSchema = new Schema({
         type: Date,
         default: Date.now
     }
-})
+}, {strict: false})
 
 UserSchema.pre('save', function(callback) {
     var actor = this;
