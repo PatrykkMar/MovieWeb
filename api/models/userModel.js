@@ -53,9 +53,19 @@ var UserSchema = new Schema({
         default: false
     },
 
-     created: {
+    created: {
         type: Date,
         default: Date.now
+    },
+
+    favourite_movies: {
+        type: Array,
+        default: []
+    },
+
+    must_see_movies: {
+        type: Array,
+        default: []
     }
 })
 
