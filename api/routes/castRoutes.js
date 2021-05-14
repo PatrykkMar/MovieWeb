@@ -11,6 +11,4 @@ module.exports = function(app) {
         .put(cast.update_cast_member)
         .delete(cast.delete_cast_member);
 
-    app.route('/v1/items/search')
-        .get(cast.search_cast)
 }

@@ -1,4 +1,7 @@
 'use strict';
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+
 /*---------------USER----------------------*/
 var mongoose = require('mongoose'),
   User = mongoose.model('Users');
@@ -32,6 +35,27 @@ var mongoose = require('mongoose'),
         }
         });
     };
+
+
+    exports.authenticate_user = function(req, res) {
+        User.findOne({ email: req.body.email }, (err, user) => {
+            if (err){
+                res.status(500).send(err);
+            }
+            else{
+                var passwordIsValid = bcrypt.compare(req.body.password, user.password);
+                if (err) return res.send(err);
+                if (!passwordIsValid) return res.json({ msg: "Invalid credentials." });
+                var token = jwt.sign({ id: user._id }, 'supersecret', {
+                    expiresIn: 86400 // 24 hours
+                });
+                res.json({ auth: true, token: token });
+            }
+        });
+    };
+
+
+
     exports.read_an_user = function(req, res) {
         User.findById(req.params.userId, function(err, user) {
           if (err){
