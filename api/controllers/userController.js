@@ -1,4 +1,7 @@
 'use strict';
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+
 /*---------------USER----------------------*/
 var mongoose = require('mongoose'),
   User = mongoose.model('Users');
@@ -32,6 +35,27 @@ var mongoose = require('mongoose'),
         }
         });
     };
+
+
+    exports.authenticate_user = function(req, res) {
+        User.findOne({ email: req.body.email }, (err, user) => {
+            if (err){
+                res.status(500).send(err);
+            }
+            else{
+                var passwordIsValid = bcrypt.compare(req.body.password, user.password);
+                if (err) return res.send(err);
+                if (!passwordIsValid) return res.json({ msg: "Invalid credentials." });
+                var token = jwt.sign({ id: user._id }, 'supersecret', {
+                    expiresIn: 86400 // 24 hours
+                });
+                res.json({ auth: true, token: token });
+            }
+        });
+    };
+
+
+
     exports.read_an_user = function(req, res) {
         User.findById(req.params.userId, function(err, user) {
           if (err){
@@ -178,6 +202,67 @@ var mongoose = require('mongoose'),
                             res.status(500).send(err);
                         } else{
                             res.json(must_see);
+                        }
+                    });
+                }
+            }
+        });
+    }
+
+    exports.follow_user = function(req, res) {
+        
+        var followerId = req.params.followerId;
+        var followedId = req.params.followedId;
+        if(followerId===followedId)
+        {
+        res.status(500).send("You can't follow yourself");
+        }
+
+        User.findOne({_id: mongoose.Types.ObjectId(followerId)}, function(err, user) {
+            if (err){
+                res.status(500).send(err);
+            }
+            else{
+                var followed_list = user.followed_users;
+                var new_followed = mongoose.Types.ObjectId(followedId);
+                if(followed_list.includes(new_followed)){
+                    res.status(500).send("User already in followed users list");
+                } else {
+                    followed_list.push(new_followed);
+                    User.findOneAndUpdate({_id: mongoose.Types.ObjectId(followerId)}, {followed_users: followed_list}, {new: true}, function(err, user){
+                        if (err){
+                            res.status(500).send(err);
+                        } else{
+                            res.json(user);
+                        }
+                    });
+                }
+            }
+        });
+    }
+
+    exports.delete_user_from_followed_users = function(req, res) {
+
+        var followerId = req.params.followerId;
+        var followedId = req.params.followedId;
+
+        User.findOne({_id: mongoose.Types.ObjectId(followerId)}, function(err, user) {
+            if (err){
+                res.status(500).send(err);
+            }
+            else{
+                var followed_list = user.followed_users;
+                var followed = mongoose.Types.ObjectId(followedId);
+                if(!followed_list.includes(followed)){
+                    res.status(500).send("User Not in Followed list");
+                } else {
+                    var index = followed_list.indexOf(followed);
+                    followed_list.splice(index, 1);
+                    User.findOneAndUpdate({_id: mongoose.Types.ObjectId(followerId)}, {followed_users: followed_list}, function(err, user){
+                        if (err){
+                            res.status(500).send(err);
+                        } else{
+                            res.json(followed_list);
                         }
                     });
                 }
