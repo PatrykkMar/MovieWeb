@@ -20,4 +20,8 @@ module.exports = function(app) {
     .post(users.add_must_see_movie)
     .delete(users.delete_movie_from_must_see);
 
+  app.route('/v1/users/:followerId/followed_users/:followedId')
+    .post(users.follow_user)
+    .delete(users.delete_user_from_followed_users)
+
 }
