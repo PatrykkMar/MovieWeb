@@ -10,4 +10,7 @@ module.exports = function(app) {
         .get(cast.read_cast_member)
         .put(cast.update_cast_member)
         .delete(cast.delete_cast_member);
+
+    app.route('/v1/cast/search/member')
+        .get(cast.search_cast);
 }

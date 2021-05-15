@@ -1,3 +1,4 @@
+
 'use strict';
 /*---------------CAST----------------------*/
 var mongoose = require('mongoose'),
@@ -63,5 +64,29 @@ exports.delete_cast_member = function(req, res) {
             res.json({ message: 'Cast member successfully deleted' });
         }
     });
+};
+
+exports.search_cast = function(req, res) {
+
+    let query = {};
+
+    if(req.query.name){
+        query.name=req.query.name;
+    }
+
+    if(req.query.surename){
+        query.surename=req.query.surename;
+    }
+    Cast.find(query)
+        .exec(function(err, cast){
+            if (err){
+                res.send('sss');
+            }
+            else{
+                res.json(cast);
+            }
+        });
+
+
 };
 
