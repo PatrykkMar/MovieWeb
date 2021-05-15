@@ -13,5 +13,6 @@ module.exports = function(app) {
      */
     app.route('/v1/award/:awarddId')
         .get(award.get_movie)
+        //.put(award.update_movie)
         .delete(award.delete_movie);
 }
