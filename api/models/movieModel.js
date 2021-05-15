@@ -93,18 +93,21 @@ var MovieSchema = new Schema({
     },
 
     director: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Cast'
+        name: {type: String},
+        link: {type: mongoose.Schema.Types.ObjectId,
+            ref: 'Cast'}
     }],
 
     actors: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Cast'
+        name: {type: String},
+        link: {type: mongoose.Schema.Types.ObjectId,
+            ref: 'Cast'}
     }],
 
     restOfCast:[{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Cast'
+        name: {type: String},
+        link: {type: mongoose.Schema.Types.ObjectId,
+            ref: 'Cast'}
     }],
 
     CountryOfOrigin: [{

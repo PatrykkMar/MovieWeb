@@ -28,7 +28,7 @@ exports.list_awards = function(req, res) {
     });
 };
 
-exports.get_movie = function(req, res) {
+exports.get_award = function(req, res) {
     Movie.findById(function(err, award) {
       if (err){
         res.status(500).send(err);
@@ -57,7 +57,7 @@ exports.update_award = function(req, res) {
   };
 
 
-exports.delete_movie = function(req, res) {
+exports.delete_award = function(req, res) {
 //Check if the user is an administrator and if not: res.status(403); "an access token is valid, but requires more privileges"
     Movie.deleteOne({_id: req.params.movieId}, function(err, award) {
         if (err){
