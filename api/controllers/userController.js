@@ -208,3 +208,64 @@ var mongoose = require('mongoose'),
             }
         });
     }
+
+    exports.follow_user = function(req, res) {
+        
+        var followerId = req.params.followerId;
+        var followedId = req.params.followedId;
+        if(followerId===followedId)
+        {
+        res.status(500).send("You can't follow yourself");
+        }
+
+        User.findOne({_id: mongoose.Types.ObjectId(followerId)}, function(err, user) {
+            if (err){
+                res.status(500).send(err);
+            }
+            else{
+                var followed_list = user.followed_users;
+                var new_followed = mongoose.Types.ObjectId(followedId);
+                if(followed_list.includes(new_followed)){
+                    res.status(500).send("User already in followed users list");
+                } else {
+                    followed_list.push(new_followed);
+                    User.findOneAndUpdate({_id: mongoose.Types.ObjectId(followerId)}, {followed_users: followed_list}, {new: true}, function(err, user){
+                        if (err){
+                            res.status(500).send(err);
+                        } else{
+                            res.json(user);
+                        }
+                    });
+                }
+            }
+        });
+    }
+
+    exports.delete_user_from_followed_users = function(req, res) {
+
+        var followerId = req.params.followerId;
+        var followedId = req.params.followedId;
+
+        User.findOne({_id: mongoose.Types.ObjectId(followerId)}, function(err, user) {
+            if (err){
+                res.status(500).send(err);
+            }
+            else{
+                var followed_list = user.followed_users;
+                var followed = mongoose.Types.ObjectId(followedId);
+                if(!followed_list.includes(followed)){
+                    res.status(500).send("User Not in Followed list");
+                } else {
+                    var index = followed_list.indexOf(followed);
+                    followed_list.splice(index, 1);
+                    User.findOneAndUpdate({_id: mongoose.Types.ObjectId(followerId)}, {followed_users: followed_list}, function(err, user){
+                        if (err){
+                            res.status(500).send(err);
+                        } else{
+                            res.json(followed_list);
+                        }
+                    });
+                }
+            }
+        });
+    }

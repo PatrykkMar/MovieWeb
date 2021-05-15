@@ -65,6 +65,11 @@ var UserSchema = new Schema({
     must_see_movies: {
         type: Array,
         default: []
+    },
+
+    followed_users:{
+        type: Array,
+        default: []
     }
 }, {strict: false})
 
