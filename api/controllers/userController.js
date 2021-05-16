@@ -269,3 +269,40 @@ var mongoose = require('mongoose'),
             }
         });
     }
+
+    exports.search_user = function(req, res) {
+
+        let query = {};
+    
+        if(req.query.username){
+            query.username=req.query.username;
+        }
+    
+        if(req.query.email){
+            query.email=req.query.email;
+        }
+
+        if(req.query.birthdate){
+            query.birthdate=req.query.birthdate;
+        }
+        
+        if(req.query.nationality){
+            query.nationality=req.query.nationality;
+        }
+
+        if(req.query.gender){
+            query.gender=req.query.gender;
+        }
+
+        User.find(query)
+            .exec(function(err, users){
+                if (err){
+                    res.send('Query error');
+                }
+                else{
+                    res.json(users);
+                }
+            });
+    
+    
+    };
