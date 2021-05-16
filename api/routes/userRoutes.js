@@ -26,4 +26,9 @@ module.exports = function(app) {
     .post(users.follow_user)
     .delete(users.delete_user_from_followed_users)
 
+  app.route('/v1/users/search/member')
+    .get(users.search_user)
+
+  app.route('v1/users/:userId/followedUsersList')
+
 }
