@@ -16,8 +16,9 @@ module.exports = function(app) {
         .put(movie.update_movie)
         .delete(movie.delete_movie)
 
-    app.route('/v1/:movieId')
+    app.route('/v1/movies/:movieId/comment')
         .post(movie.add_comment)
+        .delete(movie.delete_comment)
 
     /**
     * get results from a search engine

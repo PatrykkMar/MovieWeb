@@ -95,7 +95,6 @@ exports.search_movies = function (req, res) {
 };
 
 exports.add_comment = function (req, res) {
-    console.log(req.headers);
     if (req.headers && req.headers.authorization) {
         var authorization = req.headers.authorization.split(' ')[1],
             decoded;
@@ -131,6 +130,72 @@ exports.add_comment = function (req, res) {
                         } else {
                             var comments = movie.criticsComments;
                             comments.push(new_comment);
+                            Movie.findOneAndUpdate({_id: mongoose.Types.ObjectId(movieId)}, {criticsComments: comments}, {new: true}, function (err, movie) {
+                                if (err) {
+                                    res.status(500).send(err);
+                                } else {
+                                    res.json(movie);
+                                }
+                            });
+                        }
+
+                    }
+                });
+            }
+        });
+
+    } else {
+        return res.send(500);
+    }
+};
+
+
+exports.delete_comment = function (req, res) {
+    if (req.headers && req.headers.authorization) {
+        var authorization = req.headers.authorization.split(' ')[1],
+            decoded;
+        try {
+            decoded = jwt.verify(authorization, 'supersecret');
+        } catch (e) {
+            return res.status(401).send('unauthorized');
+        }
+        var userId = decoded.id;
+        User.findById(mongoose.Types.ObjectId(userId), function(err, user) {
+            if (err){
+                res.status(500).send(err);
+            } else {
+                console.log(user);
+                var movieId = req.params.movieId;
+
+                Movie.findOne({_id: mongoose.Types.ObjectId(movieId)}, function (err, movie) {
+                    if (err) {
+                        res.status(500).send(err);
+                    } else {
+                        if(user.role == 'USER') {
+                            var comments = movie.userComments;
+                            var comment_to_delete_index;
+                            comments.forEach(function(item, index, array) {
+                                if(item._id === req.body.commentId && (item.author === user._id ) ){
+                                    comment_to_delete_index = index;
+                                }
+                            });
+                            comments.splice(comment_to_delete_index,1);
+                            Movie.findOneAndUpdate({_id: mongoose.Types.ObjectId(movieId)}, {userComments: comments}, {new: true}, function (err, movie) {
+                                if (err) {
+                                    res.status(500).send(err);
+                                } else {
+                                    res.json(movie);
+                                }
+                            });
+                        } else {
+                            var comments = movie.criticsComments;
+                            var comment_to_delete_index;
+                            comments.forEach(function(item, index, array) {
+                                if(item._id === req.body.commentId && (item.author === user._id || user.role === 'ADMIN') ){
+                                    comment_to_delete_index = index;
+                                }
+                            });
+                            comments.splice(comment_to_delete_index,1);
                             Movie.findOneAndUpdate({_id: mongoose.Types.ObjectId(movieId)}, {criticsComments: comments}, {new: true}, function (err, movie) {
                                 if (err) {
                                     res.status(500).send(err);
