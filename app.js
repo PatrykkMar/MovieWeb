@@ -35,11 +35,13 @@ var routesUsers = require('./api/routes/userRoutes');
 var routesCast = require('./api/routes/castRoutes');
 var routesMovies = require('./api/routes/movieRoutes');
 var routesAwards = require('./api/routes/awardRoutes');
+var routesAnalytics = require('./api/routes/analyticsRoutes');
 
 routesUsers(app);
 routesCast(app);
 routesMovies(app);
 routesAwards(app);
+routesAnalytics(app);
 
 console.log("Connecting DB to: " + mongoDBURI);
 mongoose.connection.on("open", function (err, conn) {
