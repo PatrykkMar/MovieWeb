@@ -120,12 +120,14 @@ var MovieSchema = new Schema({
 
     averageUsersRating: {
         type: Number,
-        min: 0, max: 5
+        min: 0, max: 5,
+        default: 0
     },
 
     averageCriticsRating: {
         type: Number,
-        min: 0, max: 5
+        min: 0, max: 5,
+        default: 0
     },
 
     studio: [StudioSchema],
