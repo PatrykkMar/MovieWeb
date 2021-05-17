@@ -8,7 +8,7 @@ var CastSchema = new Schema({
         required: 'enter name'
     },
 
-    surename: {
+    surname: {
         type: String,
         required: 'enter surename'
     },
