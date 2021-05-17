@@ -16,6 +16,9 @@ module.exports = function(app) {
         .put(movie.update_movie)
         .delete(movie.delete_movie)
 
+    app.route('/v1/:movieId')
+        .post(movie.add_comment)
+
     /**
     * get results from a search engine
     *    RequiredRoles: None; Administrator can view "deleted" items

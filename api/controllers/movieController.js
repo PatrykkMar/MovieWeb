@@ -1,7 +1,11 @@
 'use strict';
+const jwt = require('jsonwebtoken');
+
 /*---------------MOVIE----------------------*/
 var mongoose = require('mongoose'),
-    Movie = mongoose.model('Movies');
+    Movie = mongoose.model('Movies'),
+    Comment = mongoose.model('Comments'),
+    User = mongoose.model('Users');
 
 exports.list_movies = function (req, res) {
     Movie.find({}, function (err, movie) {
@@ -88,4 +92,60 @@ exports.search_movies = function (req, res) {
                 res.json(movie);
             }
         });
+};
+
+exports.add_comment = function (req, res) {
+    console.log(req.headers);
+    if (req.headers && req.headers.authorization) {
+        var authorization = req.headers.authorization.split(' ')[1],
+            decoded;
+        try {
+            decoded = jwt.verify(authorization, 'supersecret');
+        } catch (e) {
+            return res.status(401).send('unauthorized');
+        }
+        var userId = decoded.id;
+        User.findById(mongoose.Types.ObjectId(userId), function(err, user) {
+            if (err){
+                res.status(500).send(err);
+            }
+            else{
+                var new_comment = new Comment(req.body);
+                new_comment.author = user._id;
+                var movieId = req.params.movieId;
+
+                Movie.findOne({_id: mongoose.Types.ObjectId(movieId)}, function (err, movie) {
+                    if (err) {
+                        res.status(500).send(err);
+                    } else {
+                        if(user.role == 'USER') {
+                            var comments = movie.userComments;
+                            comments.push(new_comment);
+                            Movie.findOneAndUpdate({_id: mongoose.Types.ObjectId(movieId)}, {userComments: comments}, {new: true}, function (err, movie) {
+                                if (err) {
+                                    res.status(500).send(err);
+                                } else {
+                                    res.json(movie);
+                                }
+                            });
+                        } else {
+                            var comments = movie.criticsComments;
+                            comments.push(new_comment);
+                            Movie.findOneAndUpdate({_id: mongoose.Types.ObjectId(movieId)}, {criticsComments: comments}, {new: true}, function (err, movie) {
+                                if (err) {
+                                    res.status(500).send(err);
+                                } else {
+                                    res.json(movie);
+                                }
+                            });
+                        }
+
+                    }
+                });
+            }
+        });
+
+    } else {
+        return res.send(500);
+    }
 };
