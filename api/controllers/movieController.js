@@ -173,13 +173,17 @@ exports.delete_comment = function (req, res) {
                     } else {
                         if(user.role == 'USER') {
                             var comments = movie.userComments;
-                            var comment_to_delete_index;
+                            var comment_to_delete_index = null;
                             comments.forEach(function(item, index, array) {
                                 if(item._id === req.body.commentId && (item.author === user._id ) ){
                                     comment_to_delete_index = index;
                                 }
                             });
-                            comments.splice(comment_to_delete_index,1);
+                            if(comment_to_delete_index != null){
+                                comments.splice(comment_to_delete_index,1);
+                            } else {
+                                return res.status(401).send('unauthorized');
+                            }
                             Movie.findOneAndUpdate({_id: mongoose.Types.ObjectId(movieId)}, {userComments: comments}, {new: true}, function (err, movie) {
                                 if (err) {
                                     res.status(500).send(err);
@@ -189,12 +193,17 @@ exports.delete_comment = function (req, res) {
                             });
                         } else {
                             var comments = movie.criticsComments;
-                            var comment_to_delete_index;
+                            var comment_to_delete_index = null;
                             comments.forEach(function(item, index, array) {
                                 if(item._id === req.body.commentId && (item.author === user._id || user.role === 'ADMIN') ){
                                     comment_to_delete_index = index;
                                 }
                             });
+                            if(comment_to_delete_index != null){
+                                comments.splice(comment_to_delete_index,1);
+                            } else {
+                                return res.status(401).send('unauthorized');
+                            }
                             comments.splice(comment_to_delete_index,1);
                             Movie.findOneAndUpdate({_id: mongoose.Types.ObjectId(movieId)}, {criticsComments: comments}, {new: true}, function (err, movie) {
                                 if (err) {
