@@ -110,7 +110,8 @@ exports.add_comment = function (req, res) {
             }
             else{
                 var new_comment = new Comment(req.body);
-                new_comment.author = user._id;
+                new_comment.author.id = user._id;
+                new_comment.author.gender = user.gender;
                 var movieId = req.params.movieId;
 
                 Movie.findOne({_id: mongoose.Types.ObjectId(movieId)}, function (err, movie) {

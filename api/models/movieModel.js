@@ -8,7 +8,8 @@ var CommentSchema = new Schema({
       required: 'Kindly enter the title of the comment'
     },
     author:{
-      type: String
+        id: {type: String},
+        gender: {type: String}
     },
     commentText: {
       type: String,
