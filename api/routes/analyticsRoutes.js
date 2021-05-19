@@ -8,6 +8,9 @@ module.exports = function(app) {
     app.route('/v1/analytics/highest_rated_actors/:count')
         .get(analytics.highest_rated_actors);
 
-        app.route('/v1/analytics/highest_rated_movies_by_category/:category/:type/:count')
+    app.route('/v1/analytics/highest_rated_movies_by_category/:category/:type/:count')
         .get(analytics.highest_rated_movies_by_category);
+
+    app.route('/v1/analytics/highest_rated_movies_by_gender/:gender/:type')
+        .get(analytics.highest_rated_movies_by_gender);
 }
