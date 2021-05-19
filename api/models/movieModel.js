@@ -13,7 +13,7 @@ var CommentSchema = new Schema({
     },
     commentText: {
       type: String,
-      required: 'Kindly enter your comments'
+      required: 'Kindly enter your comments',
     },
     stars: {
       type: Number,
