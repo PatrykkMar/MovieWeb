@@ -11,8 +11,11 @@ module.exports = function(app) {
      * @type get put delete
      * @url /v1/movies/:movieId
      */
+    /*
     app.route('/v1/award/:awarddId')
         .get(award.get_movie)
         //.put(award.update_movie)
         .delete(award.delete_movie);
+
+     */
 }
