@@ -106,7 +106,7 @@ exports.add_comment = function (req, res) {
         var userId = decoded.id;
         User.findById(mongoose.Types.ObjectId(userId), function(err, user) {
             if (err){
-                res.status(500).send(err);
+                res.status(400).send(err);
             }
             else{
                 var new_comment = new Comment(req.body);
@@ -114,39 +114,31 @@ exports.add_comment = function (req, res) {
                 new_comment.author.gender = user.gender;
                 var movieId = req.params.movieId;
 
-                Movie.findOne({_id: mongoose.Types.ObjectId(movieId)}, function (err, movie) {
-                    if (err) {
-                        res.status(500).send(err);
-                    } else {
-                        if(user.role == 'USER') {
-                            var comments = movie.userComments;
-                            comments.push(new_comment);
-                            Movie.findOneAndUpdate({_id: mongoose.Types.ObjectId(movieId)}, {userComments: comments}, {new: true}, function (err, movie) {
-                                if (err) {
-                                    res.status(500).send(err);
-                                } else {
-                                    res.json(movie);
-                                }
-                            });
-                        } else {
-                            var comments = movie.criticsComments;
-                            comments.push(new_comment);
-                            Movie.findOneAndUpdate({_id: mongoose.Types.ObjectId(movieId)}, {criticsComments: comments}, {new: true}, function (err, movie) {
-                                if (err) {
-                                    res.status(500).send(err);
-                                } else {
-                                    res.json(movie);
-                                }
-                            });
-                        }
-
-                    }
-                });
+                if(user.role == 'USER') {
+                    Movie.updateOne(
+                        { _id: mongoose.Types.ObjectId(movieId) },
+                        {
+                            '$push': {
+                                'userComments' : {new_comment}
+                            }
+                        },
+                        (result, error) => {
+                            error ? res.send(error) : res.json(result)});
+                } else {
+                    Movie.updateOne(
+                        { _id: movieId },
+                        {
+                            $push: {
+                                'criticsComments' : new_comment
+                            }
+                        },
+                        (result, error) => {
+                            error ? res.send(400) : res.json(result)});
+                }
             }
         });
-
     } else {
-        return res.send(500);
+        return res.send(404);
     }
 };
 
