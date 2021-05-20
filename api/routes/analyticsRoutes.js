@@ -13,4 +13,10 @@ module.exports = function(app) {
 
     app.route('/v1/analytics/highest_rated_movies_by_gender/:gender/:type')
         .get(analytics.highest_rated_movies_by_gender);
+
+	app.route('/v1/analytics/highest_rating_low_boxoffice')
+        .get(analytics.highest_rating_low_boxoffice);
+
+    app.route('/v1/analytics/lowest_rating_high_boxoffice')
+        .get(analytics.lowest_rating_high_boxoffice);
 }

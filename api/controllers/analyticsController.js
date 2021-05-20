@@ -85,5 +85,34 @@ exports.highest_rated_movies_by_gender = function(req, res) {
     });
     res.json(returnMovies);
   });
-  
 }
+
+exports.highest_rating_low_boxoffice = function(req, res) {
+  Movie.aggregate()
+    .group({"_id": null, "average": {"$avg": "$Boxoffice"}})
+    .exec(function (err, averageBoxOffice){
+      Movie.find({"Boxoffice": {$lte: averageBoxOffice[0].average}}).sort({"averageRating": "desc"}).limit(parseInt(req.params.count)).exec(function (err, movies) {
+	    if (err) {
+	      res.status(500).send(err);
+	    }
+	    else {
+		  res.json(movies);
+	    }
+    });
+  });
+};
+
+exports.lowest_rating_high_boxoffice = function(req, res) {
+  Movie.aggregate()
+	.group({"_id": null, "average": {"$avg": "$Boxoffice"}})
+	.exec(function (err, averageBoxOffice){
+	  Movie.find({"Boxoffice": {$gte: averageBoxOffice[0].average}}).sort({"averageRating": "asc"}).limit(parseInt(req.params.count)).exec(function (err, movies) {
+		if (err) {
+		  res.status(500).send(err);
+		}
+		else {
+		  res.json(movies);
+		}
+	});
+  });
+};
